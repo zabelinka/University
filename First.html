@@ -1,0 +1,78 @@
+<html>
+<head>
+<link rel = "styleme" type = "text/css" href = "mystyle.css" />
+<meta charset = "windows-1251">
+<title>Мой калькулятор</title>
+<script type = "text/javascript">
+	function count_rabbits(){
+		for(var i = 1; i <=3; i++){
+			alert("Из шляпы достали " + i + " кролика!");
+		}
+	}
+</script>
+</head>
+
+<body>
+<h1>Калькулятор</h1>
+
+<input type = "button" onclick = "count_rabbits()" value = "Посчитайте кроликов!"/>
+
+<script type = "text/javascript">
+	var s = 0;
+	var p = 1;
+	var a = 0;
+	document.write('</br>');
+	for(var i = 7; i <= 9; i++){
+		document.write('<input id = "' + "num" + i + '" type = "button" value = "' + i + '"/>');	
+	}
+	document.write('</br>');
+	for(var i = 4; i <= 6; i++){
+		document.write('<input id = "' + "num" + i + '" type = "button" value = "' + i + '"/>');	
+	}
+	document.write('</br>');
+	for(var i = 1; i <= 3; i++){
+		document.write('<input id = "' + "num" + i + '" type = "button" value = "' + i + '"/>');	
+	}
+	document.write('</br>');
+	document.getElementById('num7').onclick = function(){
+		a = 7;
+		alert("a = " + a);
+	};
+	document.getElementById('num8').onclick = function(){
+		a = 8;
+		alert("a = " + a);
+	};
+	document.getElementById('num9').onclick = function(){
+		a = 9;
+		alert("a = " + a);
+	};
+	document.getElementById('num4').onclick = function(){
+		a = 4;
+		alert("a = " + a);
+	};
+	document.getElementById('num5').onclick = function(){
+		a = 5;
+		alert("a = " + a);
+	};
+	document.getElementById('num6').onclick = function(){
+		a = 6;
+		alert("a = " + a);
+	};
+	document.getElementById('num1').onclick = function(){
+		a = 1;
+		alert("a = " + a);
+	};
+	document.getElementById('num2').onclick = function(){
+		a = 2;
+		alert("a = " + a);
+	};
+	document.getElementById('num3').onclick = function(){
+		a = 3;
+		alert("a = " + a);
+	};
+</script>
+
+
+
+</body>
+</html>
