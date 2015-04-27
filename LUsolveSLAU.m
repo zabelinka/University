@@ -8,7 +8,7 @@ x = P*b;
 for k = 1:size(b)-1
     for i = k+1:size(b)
         x(i) = x(i) - x(k)*L(i, k);
-        counter = counter + 1;
+        counter = counter + 2;
     end
 end
 %получаем единицы на диагонали
@@ -19,7 +19,7 @@ for k = size(b):-1:2
     for i = k-1:-1:1
         if U(i, k)~= 0
             x(i) = x(i) - x(k)*U(i, k)/U(i, i);
-            counter = counter + 1;
+            counter = counter + 3;
         end
     end
 end

@@ -8,7 +8,7 @@ for r = 1:size(A)-1
     APL = [A P L];
     i = r + 1;
     %если на диагонали 0 -- меняем строки
-    while APL(r, r) == 0 
+    while abs(APL(r, r)) < 1e-14
         if i>size(APL, 1)
             disp('Матрица вырожденная');
             return;
