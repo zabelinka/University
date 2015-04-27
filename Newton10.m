@@ -1,0 +1,28 @@
+xn = [0.5; 0.5; 1.5; -1.0; -0.5; 1.5; 0.5; -0.5; 1.5; -1.5];
+J = setMatrixJ(xn)       %матрица частных производных в точке xn
+y = setVectorF(xn)'      %вектор значений функций в точке xn
+[L, U, P] = myLU(J);
+delta = LUsolveSLAU(J, -y, L, U, P)   %разница между последующими приближени€ми
+%delta1 = myLUsolveSLAU(J, -y)
+i = 0;                   %счетчик номера итерации
+while max(abs(delta)) > 1e-5 & i < 100
+    xn = xn + delta;        %переход к следующему приближению
+    
+    i = i + 1;
+    disp('»тераци€ номер ')
+    disp(i)
+    disp('   ѕогрешность ')
+    disp(delta)
+    disp('   Ќовое приближение ')
+    disp(xn)
+    %пересчитываем дл€ нового xn
+    J = setMatrixJ(xn);      %матрица частных производных в точке xn
+    y = setVectorF(xn)';     %вектор значений функций в точке xn
+    [L, U, P] = myLU(J);
+    delta = LUsolveSLAU(J, -y, L, U, P)   %разница между последующими приближени€ми
+    %delta1 = myLUsolveSLAU(J, -y)
+end
+disp('   –ешение ')
+    disp(xn)
+%disp('   ѕогрешность ')
+%disp(delta)
