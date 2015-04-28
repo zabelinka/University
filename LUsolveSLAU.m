@@ -19,4 +19,8 @@ for j = size(b): -1 :2
             counter = counter + 3;
         end
     end
+    
+end
+disp('   При нахождении решения произведено арифметических операций')
+disp(counter)
 end

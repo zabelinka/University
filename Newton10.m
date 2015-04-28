@@ -24,8 +24,12 @@ while max(abs(delta)) > 1e-5 & i < 100
     globalCounter = globalCounter + counter;        %количество арифметических операций, произведенных в методе Ньютона
 end
 disp('   Решение ')
-disp(vpa(xn, 5))
+disp(vpa(xn', 5))
 disp('   Погрешность ')
-disp(delta)
+disp(delta')
 disp('   Произведено арифметических операций')
 disp(globalCounter)
+disp('   и итераций')
+disp(i)
+disp('   Проверка ')
+y = setVectorF(xn)  

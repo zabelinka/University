@@ -1,8 +1,10 @@
 xn = [0.5; 0.5; 1.5; -1.0; -0.5; 1.5; 0.5; -0.5; 1.5; -1.5];
 J = setMatrixJ(xn)       %матрица частных производных в точке xn
 y = setVectorF(xn)'      %вектор значений функций в точке xn
-[L, U, P] = myLU(J);
-delta = LUsolveSLAU(J, -y, L, U, P)   %разница между последующими приближениями
+[L, U, P, counter] = myLU(J);    %делаем разложение, считаем количество произведенных операций
+globalCounter = counter;        %количество арифметических операций, произведенных в методе Ньютона
+[delta, counter] = LUsolveSLAU(J, -y, L, U, P)  %решаем СЛАУ, считаем операции
+globalCounter = globalCounter + counter;   
 i = 0;                   %счетчик номера итерации
 while max(abs(delta)) > 1e-5 & i < 100
     xn = xn + delta;        %переход к следующему приближению
@@ -15,5 +17,16 @@ while max(abs(delta)) > 1e-5 & i < 100
     disp(xn)
     %пересчитываем для нового xn
     y = setVectorF(xn)';     %вектор значений функций в точке xn
-    delta = LUsolveSLAU(J, -y, L, U, P);   %разница между последующими приближениями
+    [delta, counter] = LUsolveSLAU(J, -y, L, U, P)  %решаем СЛАУ, считаем операции
+    globalCounter = globalCounter + counter;  
 end
+disp('   Решение ')
+disp(vpa(xn', 5))
+disp('   Погрешность ')
+disp(delta')
+disp('   Произведено арифметических операций')
+disp(globalCounter)
+disp('и итераций')
+disp(i)
+disp('   Проверка ')
+y = setVectorF(xn)  
