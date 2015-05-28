@@ -2,37 +2,54 @@ a = 2.1;
 b = 3.3;
 
 N = 4;         %число кусочков на отрезке
-H = (b - a) / N;
 
 n = 3; % трехточечная
 
-IntegralPrev = 0;
+iteration = 0;
+Integral = zeros(3, 1);
 R = -1;
+%алгебраическая степень точности 
+ m = 3;            % Ньютона-Котеса
+% m = 6;             % Гаусса
 while abs(R) > 1e-12
-    b = 2.1;
-    k = 1;
-    Integral = 0;
-    while b < 3.3
-        disp('номер кусочка = ')
-        disp(k)
-        a = b;
-        b = a + H;
+    iteration  = iteration + 1;
+    disp('Итерация');
+    disp(iteration);
+    Integral(1) = 0;
+    x1 = a;
+    % disp('длина шага');
+    H = (b - a) / N;    % шаг = длина кусочка
+    for i = 1 : N       % проходим по всем кусочкам отрезка
+        % disp('номер кусочка = ');
+        % disp(i);
+        x2 = a + i * H; % правая граница отрезка
+        % считаем на данном кусочке интеграл:
+        
         % по Ньютону-Котесу
-         Integral = Integral + NewtonCotes(a, b)
-         m = 3;
+         Integral(1) = Integral(1) + NewtonCotes(x1, x2);
+      
         % по Гауссу
-        % Integral = Integral + Gauss(a, b)
-        % m = 6;
-        k = k + 1;
+        % Integral(1) = Integral(1) + Gauss(x1, x2); 
+        x1 = x2;
     end
-    H = H / 2;
+    disp('Интеграл');
+    disp(vpa(Integral(1), 13));
     % погрешность по Рунге
-    R = (Integral - IntegralPrev) / (2^m - 1)
-    IntegralPrev = Integral;
+    R = (Integral(1) - Integral(2)) / (2^m - 1);
+    disp('Погрешность');
+    disp(R);
+    
+    % Эйткен
+    Eitken = log2((Integral(2) - Integral(3))/(Integral(1) - Integral(2)));
+    disp('Скорость по Эйткену')
+    disp(Eitken);
+    
+    Integral(3) = Integral(2);  % предпредыдущий
+    Integral(2) = Integral(1);  % предыдущий
+    N = N * 2;          % увеличили число кусочков в 2р. = уменьшили шлину шага H на 2
+    
+    
+    
 end
-disp(vpa(Integral, 13))
+disp(vpa(Integral(1), 13))
 
-
-
-k*H
-f(x) / (x - x1)
