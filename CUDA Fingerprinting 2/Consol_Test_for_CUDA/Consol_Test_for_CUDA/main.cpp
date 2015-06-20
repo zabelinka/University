@@ -23,7 +23,6 @@ struct Dist{									// value keep dictance between point[i] and point[j]
 
 class Map{
 public:
-	const double DELTA = 0.5;						// max deviation between the same points on the two maps
 	const int NUM = 5; // rand() % 40 + 60;			// the number of the points in range of 60 to 100
 	const int ARRAYDIST_SIZE = NUM * (NUM - 1) / 2;	// the number of edges in the complete graph
 	Point* pointArray;								// array of points on the map
@@ -57,6 +56,10 @@ public:
 			cout << arrayDist[i].value << "\t\t" << arrayDist[i].i << " -- " << arrayDist[i].j << endl;
 		}
 	}
+
+	void search(){
+
+	}
 };
 
 int partition(Dist* dist, int low, int hight){						// partition of the array for quicksort
@@ -82,8 +85,20 @@ void sort(Dist *dist, int low, int hight){							// quicksort
 	}
 }
 
+int binarySearch(Dist* dist, int low, int hight, double key, const double DELTA){		// find the distance in ordered array dist which absolute value differs from the key less then on DELTA
+	int index = (low + hight) / 2;
+	cout << "dist[index].value - key = " << abs(dist[index].value - key) << endl;
+	if (abs(dist[index].value - key) < DELTA) return index;					// found
+	if (low == hight) return -1;											// not found
+	if (key < dist[index].value)
+		return binarySearch(dist, low, index - 1, key, DELTA);				// go to the left
+	if (key > dist[index].value)
+		return binarySearch(dist, index + 1, hight, key, DELTA);			// go to the right
+}
+
 int main(){
 	srand(time(NULL));							// initialize random seed -- an integer value to be used by the pseudo-random number generator algorithm
+	const double DELTA = 5;						// max deviation between the same points on the two maps
 
 	// create 2 maps
 	Map* firstMap = new Map();
@@ -97,12 +112,15 @@ int main(){
 	secondMap->getDistance();
 	secondMap->printDistances();						// show results: print structure of distances
 
+	// sort the distance values only for the second map
 	cout << endl << "The distances of the second map after sorting" << endl;
 	sort(secondMap->arrayDist, 0, secondMap->ARRAYDIST_SIZE - 1);
 	secondMap->printDistances();						// show results: print structure of distances
 
+	// search the distance of the first map in the second map
 
 
+	cout << binarySearch(secondMap->arrayDist, 0, secondMap->ARRAYDIST_SIZE - 1, firstMap->arrayDist[0].value, DELTA);
 	
 
 	system("pause");
