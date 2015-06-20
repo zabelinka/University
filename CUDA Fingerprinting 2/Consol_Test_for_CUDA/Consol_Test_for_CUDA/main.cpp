@@ -15,12 +15,20 @@ struct  Point{									// point on the plane
 	}
 };
 
+struct Dist{									// value keep dictance between point[i] and point[j]
+	double value;
+	int i;
+	int j;
+};
+
 class Map{
 public:
 	Point* pointArray;							// array of points on the map
-	double** dist;									// array of distances between points
+	double** dist_matrix;									// array of distances between points
+	// not used
+	Dist* arrayDist;								// the array of distances between points
 	const double DELTA = 0.5;						// max deviation between the same points on the two maps
-	const int NUM = 2; // rand() % 40 + 60;			// the number of the points in range of 60 to 100
+	const int NUM = 5; // rand() % 40 + 60;			// the number of the points in range of 60 to 100
 	
 	Map(){										// constructor. create a map of points
 		pointArray = new Point[NUM];
@@ -30,24 +38,46 @@ public:
 		}
 	}
 
-	void distance(){
+	// not used
+	void distance_matrix(){								// fill matrix with distances between points
 		// create matrix of distances
-		dist = new double*[NUM];
+		dist_matrix = new double*[NUM];
 		for (int i = 0; i < NUM; i++){
-			dist[i] = new double[NUM];
+			dist_matrix[i] = new double[NUM];
 		}
 		// fill matrix with distances between points and print it
 		for (int i = 0; i < NUM; i++){
 			for (int j = 0; j < NUM; j++){
-				dist[i][j] = sqrt(										// Pythagorean theorem
+				dist_matrix[i][j] = sqrt(										// Pythagorean theorem
 					pow(pointArray[i].x - pointArray[j].x, 2) + 
 					pow(pointArray[i].y - pointArray[j].y, 2));
-				cout << dist[i][j] << "\t";
+				cout << dist_matrix[i][j] << "\t";
 			}
 			cout << endl;
 		}
 	}
+
+	void distance(){									// fill Dist structure with distances between point[i] and point[j] for each i and j
+		arrayDist = new Dist[NUM * (NUM - 1) / 2];		// the number of edges in the complete graph
+		int k = 0;										// the index of the element
+		for (int i = NUM - 1; i > 0; i--){
+			for (int j = 0; j < i; j++){
+				arrayDist[k].value = sqrt(				// distance by Pythagorean theorem
+					pow(pointArray[i].x - pointArray[j].x, 2) +
+					pow(pointArray[i].y - pointArray[j].y, 2));
+				arrayDist[k].i = i;						// keep the indexes of the points
+				arrayDist[k].j = j;
+				k++;		
+			}
+		}
+		// show results
+		for (int i = 0; i < NUM * (NUM - 1) / 2; i++){
+			cout << arrayDist[i].value << "\t\t" << arrayDist[i].i << " -- " << arrayDist[i].j << endl;
+		}
+	}
 };
+
+
 
 int main(){
 	srand(time(NULL));							// initialize random seed -- an integer value to be used by the pseudo-random number generator algorithm
@@ -57,9 +87,11 @@ int main(){
 	cout << endl;
 	Map* secondMap = new Map();
 
-	// fill matrix with distances between points
-	firstMap->distance();						
+	// fill structure with distances between points
+	firstMap->distance();
+	cout << endl;
 	secondMap->distance();
+	
 
 
 	system("pause");
