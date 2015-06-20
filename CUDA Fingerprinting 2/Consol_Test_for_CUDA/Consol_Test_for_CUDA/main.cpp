@@ -19,6 +19,18 @@ struct Dist{									// value keep dictance between point[i] and point[j]
 	double value;
 	int i;
 	int j;
+
+	void change(Dist another){					// replace the fields of object calling the function with the fields of another object
+		double temp_value = this->value;
+		int temp_i = this->i;
+		int temp_j = this->j;
+		this->value = another.value;
+		this->i = another.i;
+		this->j = another.j;
+		another.value = temp_value;
+		another.i = temp_i;
+		another.j = temp_j;
+	}
 };
 
 class Map{
@@ -70,14 +82,35 @@ public:
 				k++;		
 			}
 		}
-		// show results
+	}
+
+	void printDistances(){								// print structure Dist
 		for (int i = 0; i < NUM * (NUM - 1) / 2; i++){
 			cout << arrayDist[i].value << "\t\t" << arrayDist[i].i << " -- " << arrayDist[i].j << endl;
 		}
 	}
 };
 
+int partition(int* a, int low, int hight){						// partition of the array for quicksort
+	int l = low, r = hight;										// left and right indexes
+	int pivot = a[(low + hight) / 2];							// index of a pivot element in the middle of the array
+	while (true){
+		cout << "l <= r\t" << l << " <= " << r << endl;
+		while (a[l] < pivot) l++;
+		while (a[r] > pivot) r--;
+		if (l < r) swap(a[l], a[r]);
+		else return r;
+	}
+}
 
+void sort(int *a, int low, int hight){							// quicksort
+	cout << "sort " << low << " -- " << hight << endl;
+	if (low < hight){
+		int pivot = partition(a, low, hight);					// partition of the array: { < pivot | pivot | > pivot}
+		sort(a, low, pivot);									//		recursive call for 
+		sort(a, pivot + 1, hight);								//		two parts of the array
+	}
+}
 
 int main(){
 	srand(time(NULL));							// initialize random seed -- an integer value to be used by the pseudo-random number generator algorithm
@@ -89,10 +122,18 @@ int main(){
 
 	// fill structure with distances between points
 	firstMap->distance();
+	firstMap->printDistances();							// show results
 	cout << endl;
 	secondMap->distance();
-	
+	secondMap->printDistances();							// show results
 
+	int a[] = {6, 0, 1, 5, 7, 2, 3, 8, 4, 9};
+	sort(a, 0, 9);
+	for (int i = 0; i < 10; i++){
+		cout << a[i] << "\t";
+	}
+
+	
 
 	system("pause");
 	return 0;
