@@ -20,7 +20,12 @@ struct  Point{									// point on the plane
 		this->printPoint();
 		cout << endl;
 	}
-	
+	void turn_angle(double angle){				// turn Point by the angle
+		double tx = this->x;
+		double ty = this->y;
+		this->x = (int)(tx * cos(angle) + ty * sin(angle));
+		this->y = (int)(- tx * sin(angle) + ty * cos(angle));
+	}
 };
 
 struct Dist{									// value keep dictance between point[i] and point[j]
@@ -107,36 +112,40 @@ public:
 	}
 
 	// calculates the angle of turn of points of the second map around the pole and makes turn for all points of the array of the second map
-	void turn(Point pole, Point X, Point Y, Point* arrayPoint, const int arrayPointSize){
-		// find the angle between X1X2 and X1Y2
-		double dy = X.y - pole.y;
-		double dx = X.x - pole.x;
-		double slope1 = dy / dx;
-		dy = Y.y - pole.y;
-		dx = Y.x - pole.x;
-		double slope2 = dy / dx;
-		double angle;
-		if (slope1 * slope2 == -1){
-			angle = M_PI_2;
-		}
-		else{
-			angle = -atan((slope2 - slope1) / (1 + slope1 * slope2));
-		}
+	void turn(Point P, Point X, Point Y, Point* arrayPoint, const int arrayPointSize){
+		// translation of the origin
+		X.x -= P.x;
+		X.y -= P.y;
+		Y.x -= P.x;
+		Y.y -= P.y;
+		// turn PX and PY before coincidence with Ox
+		double alpha = atan((double)(X.y) / (double)(X.x));
+		X.turn_angle(alpha);
+		Y.turn_angle(alpha);
 
+		// turn PY before coincidence with PX
+		double phi;
+		if (Y.x > 0) phi = atan((double)Y.y / (double)Y.x);
+			else if (Y.x < 0) phi = M_PI - atan((double)Y.y / (double)Y.x);
+				else phi = M_PI_2;
+		Y.turn_angle(-phi);
+		// inverse turn and translation in initial coordinates system
+		Y.turn_angle(-alpha);
+		Y.x += P.x;
+		Y.y += P.y;
+		 
+		// turn all points except Y
 		for (int i = 0; i < arrayPointSize; i++){
-			if (i == 54){
-				cout << 54;
-			}
 			cout << i << "\t";
 			arrayPoint[i].printPoint();
 			cout << "\tturns to\t";
-
-			int x = arrayPoint[i].x;
-			int y = arrayPoint[i].y;
-			arrayPoint[i].x = (x - pole.x) * cos(angle) - (y - pole.y) * sin(angle) + pole.x;
-
-			arrayPoint[i].y = (x - pole.x) * sin(angle) + (y - pole.y) * cos(angle) + pole.y;
-
+			
+			arrayPoint[i].x -= P.x;
+			arrayPoint[i].y -= P.y;
+			arrayPoint[i].turn_angle(-phi);
+			arrayPoint[i].x += P.x;
+			arrayPoint[i].y += P.y;
+			
 			arrayPoint[i].printPoint();
 			cout << endl;
 		}
@@ -197,7 +206,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int main(){
-	//srand(time(NULL));							// initialize random seed -- an integer value to be used by the pseudo-random number generator algorithm
+	srand(time(NULL));							// initialize random seed -- an integer value to be used by the pseudo-random number generator algorithm
 	const double DELTA = 1e-20;						// max deviation between the same points on the two maps
 
 	// create maps
